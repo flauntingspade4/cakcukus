@@ -1,0 +1,8 @@
+[package]
+name = "cakcukus"
+version = "0.1.0"
+authors = ["flauntingspade4 <48335751+flauntingspade4@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+num-traits = "0.2.12"
