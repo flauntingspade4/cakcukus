@@ -8,7 +8,10 @@ pub use differentiation::Differentiation;
 pub use intergration::Intergration;
 pub use term::TermTrait;
 
-/// A trait describing a type's ability to perform basic calculus
+/// A trait describing a type's ability to perform basic calculus,
+/// automatically implemented for any type that implements
+/// [Intergration](trait.Intergration.html), [Differentiation](trait.Differentiation.html)
+/// and [TermTrait](trait.TermTrait.html).
 pub trait Calculus<T>: Differentiation<T> + Intergration<T> + TermTrait<T>
 where
     T: Num + Pow<T, Output = T> + From<u8> + Copy,
