@@ -1,4 +1,7 @@
-use cakcukus::{Calculus, Term};
+use cakcukus::{
+    traits::{Differentiation, TermTrait},
+    Term,
+};
 
 #[test]
 fn differentiate_return() {

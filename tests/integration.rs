@@ -1,4 +1,7 @@
-use cakcukus::{Calculus, Term};
+use cakcukus::{
+    traits::{Intergration, TermTrait},
+    Term,
+};
 
 #[test]
 fn intergrate_return() {

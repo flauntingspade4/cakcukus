@@ -5,8 +5,8 @@
 //! The trait [Calculus](calculus/trait.calculus.html)
 //! is used for the basic calculus methods.
 
-pub mod calculus;
 pub mod term;
+pub mod traits;
 
-pub use crate::calculus::Calculus;
 pub use crate::term::Term;
+pub use crate::traits::Calculus;
