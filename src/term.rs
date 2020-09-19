@@ -59,7 +59,13 @@ impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> Term<T> {
     }
 }
 
-impl<T: Num + Pow<T, Output = T> + From<u8> + Copy + Display> Debug for Term<T> {
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy + Debug> Debug for Term<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}x^{:?}", self.coefficient, self.exponent)
+    }
+}
+
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy + Display> Display for Term<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x^{}", self.coefficient, self.exponent)
     }
