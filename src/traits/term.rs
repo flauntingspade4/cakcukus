@@ -8,6 +8,15 @@ pub trait TermTrait<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
         self.sum_with_respect_to(&upper) - self.sum_with_respect_to(&lower)
     }
     /// Sums the term, with respect to a given x
+    /// ```
+    /// use cakcukus::{terms, traits::TermTrait, Term};
+    ///
+    /// let term = terms!(5., 2.);
+    ///
+    /// let summed = term.sum_with_respect_to(&2.);
+    ///
+    /// assert_eq!(20., summed);
+    /// ```
     fn sum_with_respect_to(&self, x: &T) -> T;
 }
 
