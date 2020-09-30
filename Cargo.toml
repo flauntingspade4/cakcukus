@@ -5,4 +5,4 @@ authors = ["flauntingspade4 <48335751+flauntingspade4@users.noreply.github.com>"
 edition = "2018"
 
 [dependencies]
-num-traits = "0.2.12"
+num-traits = "^0.2.12"

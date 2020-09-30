@@ -11,9 +11,11 @@ pub trait TermTrait<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
     /// ```
     /// use cakcukus::{terms, traits::TermTrait, Term};
     ///
-    /// let term = terms!(5., 2.);
+    /// let term = terms!(5., 2.); // 5x^2
     ///
     /// let summed = term.sum_with_respect_to(&2.);
+    ///
+    /// // 5(2)^2 = 5(4) = 20
     ///
     /// assert_eq!(20., summed);
     /// ```
@@ -39,6 +41,11 @@ where
     T: Num + Pow<T, Output = T> + From<u8> + Copy,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
-        self.coefficient * x.pow(self.exponent)
+        let sum = self.coefficient * x.pow(self.exponent);
+        if sum != sum {
+            T::from(0)
+        } else {
+            sum
+        }
     }
 }

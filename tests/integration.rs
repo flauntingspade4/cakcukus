@@ -1,5 +1,5 @@
 use cakcukus::{
-    traits::{Intergration, TermTrait},
+    traits::{Integration, TermTrait},
     Term,
 };
 
@@ -9,7 +9,7 @@ fn intergrate_return() {
     let terms = vec![Term::new(1., 4.), Term::new(2., 1.), Term::new(4., 0.)];
 
     // This then intergrates to 0.2x^5 + x^2 + 4x
-    let intergrated = terms.intergrated_self();
+    let intergrated = terms.intergrate_self();
 
     assert_eq!(18.4, intergrated.sum_between(0., 2.));
 }
