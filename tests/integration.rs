@@ -11,5 +11,5 @@ fn intergrate_return() {
     // This then intergrates to 0.2x^5 + x^2 + 4x
     let intergrated = terms.integrate_self();
 
-    assert_eq!(18.4, intergrated.sum_between(0., 2.));
+    assert!(18.4 - intergrated.sum_between(0., 2.) < f32::EPSILON);
 }
