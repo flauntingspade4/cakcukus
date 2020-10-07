@@ -12,5 +12,5 @@ fn differentiate_return() {
     let differentiated = terms.differentiate_self();
 
     // At x = 7, the gradient should be 25
-    assert_eq!(25., differentiated.sum_with_respect_to(&7.));
+    assert!(25. - differentiated.sum_with_respect_to(&7.) < f32::EPSILON);
 }
