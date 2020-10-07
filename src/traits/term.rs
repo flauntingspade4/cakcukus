@@ -42,7 +42,7 @@ where
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
         let sum = self.coefficient * x.pow(self.exponent);
-        if sum != sum {
+        if !sum.eq(&sum) {
             T::from(0)
         } else {
             sum

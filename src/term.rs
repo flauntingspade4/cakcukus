@@ -7,7 +7,7 @@ use num_traits::{Num, Pow};
 ///
 /// # Examples
 /// ```
-/// use cakcukus::{terms, prelude::*};
+/// use cakcukus::{terms, Term};
 ///
 /// let terms = terms!(2., 2., -3., 1.); // Can generate a Vec of Terms,
 ///
