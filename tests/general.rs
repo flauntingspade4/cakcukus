@@ -22,7 +22,16 @@ fn mult() {
 
     assert_eq!(term, Term::new(30, 1));
 
-    term *= terms!(1, 3);
+    assert_eq!(term * terms!(1, 3), Term::new(30, 4));
+}
 
-    assert_eq!(term, Term::new(30, 4));
+#[test]
+fn div() {
+    let mut term: Term<u32> = terms!(30, 4);
+
+    term /= 15;
+
+    assert_eq!(term, Term::new(2, 4));
+
+    assert_eq!(term / terms!(1, 3), Term::new(2, 1));
 }

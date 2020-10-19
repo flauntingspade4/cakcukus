@@ -87,6 +87,19 @@ impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> DivAssign for Term<T> {
         self.exponent = self.exponent - rhs.exponent;
     }
 }
+impl<T: Num + Pow<T, Output = T> + From<u8>> Div<T> for Term<T> {
+    type Output = Self;
+
+    fn div(self, rhs: T) -> Self::Output {
+        Self::new(self.coefficient / rhs, self.exponent)
+    }
+}
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> DivAssign<T> for Term<T> {
+    fn div_assign(&mut self, rhs: T) {
+        self.coefficient = self.coefficient / rhs;
+    }
+}
+
 impl<T: Num + Pow<T, Output = T> + From<u8>> Mul for Term<T> {
     type Output = Self;
 
