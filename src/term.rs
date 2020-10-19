@@ -1,4 +1,7 @@
-use core::fmt::{Debug, Display};
+use core::{
+    fmt::{Debug, Display},
+    ops::{Div, Mul},
+};
 
 use num_traits::{Num, Pow};
 
@@ -39,7 +42,7 @@ macro_rules! terms {
 #[derive(Clone, Copy, PartialEq)]
 pub struct Term<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + From<u8>,
 {
     /// The number that x is multiplied by in the term
     pub coefficient: T,
@@ -48,7 +51,7 @@ where
     pub exponent: T,
 }
 
-impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> Term<T> {
+impl<T: Num + Pow<T, Output = T> + From<u8>> Term<T> {
     /// Constructs a new term based off a given coefficient
     /// and exponent
     pub fn new(coefficient: T, exponent: T) -> Self {
@@ -59,13 +62,34 @@ impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> Term<T> {
     }
 }
 
-impl<T: Num + Pow<T, Output = T> + From<u8> + Copy + Debug> Debug for Term<T> {
+impl<T: Num + Pow<T, Output = T> + From<u8>> Div for Term<T> {
+    type Output = Self;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        Self::new(
+            self.coefficient / rhs.coefficient,
+            self.exponent - rhs.exponent,
+        )
+    }
+}
+impl<T: Num + Pow<T, Output = T> + From<u8>> Mul for Term<T> {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self::new(
+            self.coefficient * rhs.coefficient,
+            self.exponent + rhs.exponent,
+        )
+    }
+}
+
+impl<T: Num + Pow<T, Output = T> + From<u8> + Debug> Debug for Term<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}x^{:?}", self.coefficient, self.exponent)
     }
 }
 
-impl<T: Num + Pow<T, Output = T> + From<u8> + Copy + Display> Display for Term<T> {
+impl<T: Num + Pow<T, Output = T> + From<u8> + Display> Display for Term<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x^{}", self.coefficient, self.exponent)
     }

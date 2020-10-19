@@ -2,7 +2,14 @@ use num_traits::{Num, Pow};
 
 use crate::Term;
 
-pub trait TermTrait<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
+/// A trait describing a type's ability to be
+/// treated as a term in a polynomial-while it's
+/// not required that T implements Copy, it's
+/// advised
+pub trait TermTrait<T>
+where
+    T: Num + Pow<T, Output = T> + From<u8>,
+{
     /// Sums between two given upper and lower bounds
     fn sum_between(&self, lower: T, upper: T) -> T {
         self.sum_with_respect_to(&upper) - self.sum_with_respect_to(&lower)
@@ -25,7 +32,7 @@ pub trait TermTrait<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
 impl<J, T> TermTrait<T> for Vec<J>
 where
     J: TermTrait<T>,
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + From<u8>,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
         let mut total = T::from(0);
