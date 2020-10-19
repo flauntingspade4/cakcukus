@@ -1,6 +1,6 @@
 use core::{
     fmt::{Debug, Display},
-    ops::{Div, Mul},
+    ops::{Div, DivAssign, Mul, MulAssign},
 };
 
 use num_traits::{Num, Pow};
@@ -18,10 +18,17 @@ use num_traits::{Num, Pow};
 ///
 /// let term: Term<u32> = terms!(5, 2); // Or a single term
 ///
-/// assert_eq!(term, Term::new(5, 2))
+/// assert_eq!(term, Term::new(5, 2));
+///
+/// let term: Term<u32> = terms!(5);
+///
+/// assert_eq!(term, Term::new(5, 0));
 /// ```
 #[macro_export]
 macro_rules! terms {
+    ($coefficient:expr) => {
+        Term::new($coefficient, 0)
+    };
     ($coefficient:expr, $exponent:expr) => {
         Term::new($coefficient, $exponent)
     };
@@ -39,6 +46,8 @@ macro_rules! terms {
 /// to a negative power will return a floating point number,
 /// which is not an integer. (This may be fixed in a future
 /// update, but for now will be ignored.)
+///
+/// Term<T> can be multipled and divided by Term<T>, or T
 #[derive(Clone, Copy, PartialEq)]
 pub struct Term<T>
 where
@@ -72,6 +81,12 @@ impl<T: Num + Pow<T, Output = T> + From<u8>> Div for Term<T> {
         )
     }
 }
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> DivAssign for Term<T> {
+    fn div_assign(&mut self, rhs: Self) {
+        self.coefficient = self.coefficient / rhs.coefficient;
+        self.exponent = self.exponent - rhs.exponent;
+    }
+}
 impl<T: Num + Pow<T, Output = T> + From<u8>> Mul for Term<T> {
     type Output = Self;
 
@@ -80,6 +95,24 @@ impl<T: Num + Pow<T, Output = T> + From<u8>> Mul for Term<T> {
             self.coefficient * rhs.coefficient,
             self.exponent + rhs.exponent,
         )
+    }
+}
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> Mul<T> for Term<T> {
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Self::new(self.coefficient * rhs, self.exponent)
+    }
+}
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> MulAssign for Term<T> {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.coefficient = self.coefficient * rhs.coefficient;
+        self.exponent = self.exponent + rhs.exponent;
+    }
+}
+impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> MulAssign<T> for Term<T> {
+    fn mul_assign(&mut self, rhs: T) {
+        self.coefficient = self.coefficient * rhs;
     }
 }
 

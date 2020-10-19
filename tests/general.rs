@@ -13,3 +13,16 @@ fn term() {
 
     assert_eq!(term, Term::new(5, 2))
 }
+
+#[test]
+fn mult() {
+    let mut term: Term<u32> = terms!(2, 1);
+
+    term *= 15;
+
+    assert_eq!(term, Term::new(30, 1));
+
+    term *= terms!(1, 3);
+
+    assert_eq!(term, Term::new(30, 4));
+}
