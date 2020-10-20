@@ -14,13 +14,13 @@ pub use term::TermTrait;
 /// and [TermTrait](trait.TermTrait.html).
 pub trait Calculus<T>: Differentiation<T> + Integration<T> + TermTrait<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
 }
 
 impl<I, T> Calculus<T> for I
 where
     I: Differentiation<T> + Integration<T> + TermTrait<T>,
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
 }

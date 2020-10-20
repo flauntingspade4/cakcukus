@@ -1,11 +1,14 @@
-use num_traits::{Num, Pow};
+use num_traits::{
+    identities::{one, zero},
+    Num, Pow,
+};
 
 use crate::Term;
 
 use super::TermTrait;
 
 /// Describes a type's ability to do basic differentiation
-pub trait Differentiation<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
+pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
     /// Differentiates self, with respect to a given x
     fn differentiate(&self, x: &T) -> T;
     /// Differentiates a copy of self, and returns the copy
@@ -15,10 +18,10 @@ pub trait Differentiation<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
 impl<J, T> Differentiation<T> for Vec<J>
 where
     J: Differentiation<T> + TermTrait<T>,
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     fn differentiate(&self, x: &T) -> T {
-        let mut total = T::from(0);
+        let mut total = zero();
         for term in self.iter() {
             total = total + term.differentiate(&x);
         }
@@ -35,12 +38,12 @@ where
 
 impl<T> Differentiation<T> for Term<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     fn differentiate(&self, x: &T) -> T {
         self.differentiate_self().sum_with_respect_to(x)
     }
     fn differentiate_self(&self) -> Self {
-        Self::new(self.coefficient * self.exponent, self.exponent - T::from(1))
+        Self::new(self.coefficient * self.exponent, self.exponent - one())
     }
 }

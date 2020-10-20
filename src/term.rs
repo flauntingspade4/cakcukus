@@ -46,7 +46,7 @@ macro_rules! terms {
 #[derive(Clone, Copy, PartialEq)]
 pub struct Term<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8>,
+    T: Num + Pow<T, Output = T>,
 {
     /// The number that x is multiplied by in the term
     pub coefficient: T,
@@ -55,7 +55,7 @@ where
     pub exponent: T,
 }
 
-impl<T: Num + Pow<T, Output = T> + From<u8>> Term<T> {
+impl<T: Num + Pow<T, Output = T>> Term<T> {
     /// Constructs a new term based off a given coefficient
     /// and exponent
     pub fn new(coefficient: T, exponent: T) -> Self {
@@ -77,7 +77,7 @@ mod impl_std_traits {
 
     use num_traits::{Num, Pow};
     // Allowing Term<T> to divide by Term<T> and T
-    impl<T: Num + Pow<T, Output = T> + From<u8>> Div for Term<T> {
+    impl<T: Num + Pow<T, Output = T>> Div for Term<T> {
         type Output = Self;
 
         fn div(self, rhs: Self) -> Self::Output {
@@ -87,26 +87,26 @@ mod impl_std_traits {
             )
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> DivAssign for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> DivAssign for Term<T> {
         fn div_assign(&mut self, rhs: Self) {
             self.coefficient = self.coefficient / rhs.coefficient;
             self.exponent = self.exponent - rhs.exponent;
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8>> Div<T> for Term<T> {
+    impl<T: Num + Pow<T, Output = T>> Div<T> for Term<T> {
         type Output = Self;
 
         fn div(self, rhs: T) -> Self::Output {
             Self::new(self.coefficient / rhs, self.exponent)
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> DivAssign<T> for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> DivAssign<T> for Term<T> {
         fn div_assign(&mut self, rhs: T) {
             self.coefficient = self.coefficient / rhs;
         }
     }
     // Allowing Term<T> to multiply by Term<T> and T
-    impl<T: Num + Pow<T, Output = T> + From<u8>> Mul for Term<T> {
+    impl<T: Num + Pow<T, Output = T>> Mul for Term<T> {
         type Output = Self;
 
         fn mul(self, rhs: Self) -> Self::Output {
@@ -116,32 +116,32 @@ mod impl_std_traits {
             )
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> MulAssign for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> MulAssign for Term<T> {
         fn mul_assign(&mut self, rhs: Self) {
             self.coefficient = self.coefficient * rhs.coefficient;
             self.exponent = self.exponent + rhs.exponent;
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> Mul<T> for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> Mul<T> for Term<T> {
         type Output = Self;
 
         fn mul(self, rhs: T) -> Self::Output {
             Self::new(self.coefficient * rhs, self.exponent)
         }
     }
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Copy> MulAssign<T> for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> MulAssign<T> for Term<T> {
         fn mul_assign(&mut self, rhs: T) {
             self.coefficient = self.coefficient * rhs;
         }
     }
 
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Debug> Debug for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Debug> Debug for Term<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "{:?}x^{:?}", self.coefficient, self.exponent)
         }
     }
 
-    impl<T: Num + Pow<T, Output = T> + From<u8> + Display> Display for Term<T> {
+    impl<T: Num + Pow<T, Output = T> + Display> Display for Term<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "{}x^{}", self.coefficient, self.exponent)
         }

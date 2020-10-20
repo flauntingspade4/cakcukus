@@ -1,4 +1,4 @@
-use num_traits::{Num, Pow};
+use num_traits::{identities::zero, Num, Pow};
 
 use crate::Term;
 
@@ -8,7 +8,7 @@ use crate::Term;
 /// advised
 pub trait TermTrait<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8>,
+    T: Num + Pow<T, Output = T>,
 {
     /// Sums between two given upper and lower bounds
     fn sum_between(&self, lower: T, upper: T) -> T {
@@ -32,10 +32,10 @@ where
 impl<J, T> TermTrait<T> for Vec<J>
 where
     J: TermTrait<T>,
-    T: Num + Pow<T, Output = T> + From<u8>,
+    T: Num + Pow<T, Output = T>,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
-        let mut total = T::from(0);
+        let mut total = zero();
         for term in self.iter() {
             total = total + term.sum_with_respect_to(x);
         }
@@ -45,12 +45,12 @@ where
 
 impl<T> TermTrait<T> for Term<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
         let sum = self.coefficient * x.pow(self.exponent);
         if !sum.eq(&sum) {
-            T::from(0)
+            zero()
         } else {
             sum
         }

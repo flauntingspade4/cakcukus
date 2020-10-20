@@ -1,10 +1,13 @@
-use num_traits::{Num, Pow};
+use num_traits::{
+    identities::{one, zero},
+    Num, Pow,
+};
 
 use crate::Term;
 
 use super::TermTrait;
 
-pub trait Integration<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
+pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     /// Intergrates a copy of self, and returns the copy
     fn integrate_self(&self) -> Self;
     /// Returns self, intergrated to the upper and lower bound
@@ -14,7 +17,7 @@ pub trait Integration<T: Num + Pow<T, Output = T> + From<u8> + Copy> {
 impl<J, T> Integration<T> for Vec<J>
 where
     J: Integration<T> + TermTrait<T>,
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     fn integrate_self(&self) -> Self {
         let mut all = Vec::with_capacity(self.len());
@@ -25,7 +28,7 @@ where
     }
 
     fn integrate(&self, lower: T, upper: T) -> T {
-        let mut total = T::from(0);
+        let mut total = zero();
         for x in self.iter() {
             total = total + x.sum_with_respect_to(&upper) - x.sum_with_respect_to(&lower);
         }
@@ -35,10 +38,10 @@ where
 
 impl<T> Integration<T> for Term<T>
 where
-    T: Num + Pow<T, Output = T> + From<u8> + Copy,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     fn integrate_self(&self) -> Self {
-        let exponent = self.exponent + T::from(1);
+        let exponent = self.exponent + one();
         Self::new(self.coefficient / exponent, exponent)
     }
 
