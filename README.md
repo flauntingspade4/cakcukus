@@ -7,11 +7,11 @@
 
 ## About The Project
 
-A very basic library for simple calculus, with a `Term` type, and three calulus traits
+A very basic library for simple calculus, with a `Term` type, and three traits based around calculus
 
 * `Integration` - A type's ability to perform basic integration
 * `Differentiation` - A type's ability to perform basic differentiation
-* `TermTrait` - A type's ability to be treated as a term in a polynomial
+* `TermTrait` - A type's ability to be treated as a term in a polynomial, or as a polynomial
 
 The built-in `Term` implements all three traits, but it's allowed for other types to implement them for similar functionality.
 `Term` is also generic, but they type used for it's coefficient and exponent must have basic maths methods avaliable for them
@@ -30,12 +30,17 @@ In main.rs:
 ``` rust
 use cakcukus::{
     traits::{Differentiation, TermTrait},
-    Term,
+    Polynomial, Term,
 };
 
 fn main() {
     // Build the initial equation, being 2x^2 - 3x + 5
-    let terms = vec![Term::new(2., 2.), Term::new(-3., 1.), Term::new(5., 0.)];
+    let terms: Polynomial<f64> = Polynomial(vec![
+        Term::new(2., 2.),
+        Term::new(-3., 1.),
+        Term::new(5., 0.),
+    ]);
+    // Could also use `let terms = terms!(2., 2., -3., 1., 5., 0.);
 
     // This differentiates into 4x - 3
     let differentiated = terms.differentiate_self();
