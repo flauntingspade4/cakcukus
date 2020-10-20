@@ -91,3 +91,37 @@ fn div_test_polynomial_t() {
 
     assert_eq!(polynomial_2, polynomial);
 }
+
+#[test]
+#[ignore]
+fn simplify_bench() {
+    use simple_stopwatch::Stopwatch;
+
+    let mut polynomial = terms!();
+
+    for i in 0..500 {
+        let i = i as f64;
+        polynomial.0.push(terms!(i * 12., i / (-2.5)));
+    }
+
+    let mut sw = Stopwatch::start_new();
+
+    polynomial *= terms!(2.15, 345., 6.2, 2., 4.9, 5., 2., 0.);
+
+    let ms = sw.ms();
+    println!(
+        "Time taken to multiply: {}ms, now {} terms",
+        ms,
+        polynomial.0.len()
+    );
+    sw.restart();
+
+    polynomial.simplify();
+
+    let ms = sw.ms();
+    println!(
+        "Time taken to simplify: {}ms, now {} terms",
+        ms,
+        polynomial.0.len()
+    );
+}

@@ -32,27 +32,31 @@ where
 
 impl<T> Polynomial<T>
 where
-    T: Num + Pow<T, Output = T> + Copy + PartialEq + PartialOrd,
+    T: Num + Pow<T, Output = T> + Copy + PartialEq + PartialOrd + Debug,
 {
     pub fn simplify(&mut self) {
-        let mut current_coefficient = zero();
-        let mut sorted: Vec<Term<T>> = Vec::new();
-        let mut prev = match self.0.first() {
-            Some(t) => t.coefficient,
+        let mut prev_exponent = match self.0.first() {
+            Some(t) => t.exponent,
             None => return,
         };
+
+        let mut current_coefficient = zero();
+        let mut sorted: Vec<Term<T>> = Vec::new();
         self.0
             .sort_by(|a, b| b.exponent.partial_cmp(&a.exponent).unwrap());
 
         for next_term in self.0.iter() {
-            if next_term.exponent == prev {
+            if next_term.exponent == prev_exponent {
                 current_coefficient = current_coefficient + next_term.coefficient;
             } else {
-                sorted.push(Term::new(current_coefficient, prev));
+                sorted.push(Term::new(current_coefficient, prev_exponent));
                 current_coefficient = next_term.coefficient;
-                prev = next_term.exponent;
+                prev_exponent = next_term.exponent;
             }
         }
+        sorted.push(Term::new(current_coefficient, prev_exponent));
+
+        self.0 = sorted;
     }
 }
 
@@ -114,7 +118,7 @@ mod impl_std_traits {
         }
     }
     // Allowing Polynomial<T> to multiply by Polynomial<T>, Term<T> and T
-    impl<T: Num + Pow<T, Output = T> + Copy + PartialOrd + std::ops::AddAssign> Mul for Polynomial<T> {
+    impl<T: Num + Pow<T, Output = T> + Copy> Mul for Polynomial<T> {
         type Output = Self;
 
         fn mul(self, rhs: Self) -> Self::Output {
@@ -129,11 +133,13 @@ mod impl_std_traits {
     }
     impl<T: Num + Pow<T, Output = T> + Copy> MulAssign for Polynomial<T> {
         fn mul_assign(&mut self, rhs: Self) {
-            for term in self.0.iter_mut() {
+            let mut to_set = Vec::with_capacity(self.0.len() * rhs.0.len());
+            for term in self.0.iter() {
                 for rhs_term in rhs.0.iter() {
-                    *term = *term * *rhs_term;
+                    to_set.push(*term * *rhs_term);
                 }
             }
+            *self = Self(to_set)
         }
     }
     impl<T: Num + Pow<T, Output = T> + Copy> Mul<Term<T>> for Polynomial<T> {
