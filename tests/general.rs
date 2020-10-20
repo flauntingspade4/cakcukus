@@ -1,10 +1,13 @@
-use cakcukus::{terms, Term};
+use cakcukus::{terms, Polynomial, Term};
 
 #[test]
 fn terms() {
     let terms = terms!(2., 2., -3., 1.);
 
-    assert_eq!(terms, vec![Term::new(2., 2.), Term::new(-3., 1.)]);
+    assert_eq!(
+        terms,
+        Polynomial(vec![Term::new(2., 2.), Term::new(-3., 1.)])
+    );
 }
 
 #[test]

@@ -3,9 +3,7 @@ use num_traits::{
     Num, Pow,
 };
 
-use crate::Term;
-
-use super::TermTrait;
+use crate::{traits::TermTrait, Polynomial, Term};
 
 pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     /// Intergrates a copy of self, and returns the copy
@@ -14,22 +12,21 @@ pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     fn integrate(&self, lower: T, upper: T) -> T;
 }
 
-impl<J, T> Integration<T> for Vec<J>
+impl<T> Integration<T> for Polynomial<T>
 where
-    J: Integration<T> + TermTrait<T>,
     T: Num + Pow<T, Output = T> + Copy,
 {
     fn integrate_self(&self) -> Self {
-        let mut all = Vec::with_capacity(self.len());
-        for x in self.iter() {
+        let mut all = Vec::with_capacity(self.0.len());
+        for x in self.0.iter() {
             all.push(x.integrate_self())
         }
-        all
+        Polynomial(all)
     }
 
     fn integrate(&self, lower: T, upper: T) -> T {
         let mut total = zero();
-        for x in self.iter() {
+        for x in self.0.iter() {
             total = total + x.sum_with_respect_to(&upper) - x.sum_with_respect_to(&lower);
         }
         total

@@ -3,9 +3,7 @@ use num_traits::{
     Num, Pow,
 };
 
-use crate::Term;
-
-use super::TermTrait;
+use crate::{traits::TermTrait, Polynomial, Term};
 
 /// Describes a type's ability to do basic differentiation
 pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
@@ -15,24 +13,23 @@ pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
     fn differentiate_self(&self) -> Self;
 }
 
-impl<J, T> Differentiation<T> for Vec<J>
+impl<T> Differentiation<T> for Polynomial<T>
 where
-    J: Differentiation<T> + TermTrait<T>,
     T: Num + Pow<T, Output = T> + Copy,
 {
     fn differentiate(&self, x: &T) -> T {
         let mut total = zero();
-        for term in self.iter() {
+        for term in self.0.iter() {
             total = total + term.differentiate(&x);
         }
         total
     }
     fn differentiate_self(&self) -> Self {
-        let mut all = Vec::with_capacity(self.len());
-        for term in self.iter() {
+        let mut all = Vec::with_capacity(self.0.len());
+        for term in self.0.iter() {
             all.push(term.differentiate_self())
         }
-        all
+        Self(all)
     }
 }
 
