@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use crate::Term;
 
-use num_traits::{Num, Pow};
+use num_traits::{identities::zero, Num, Pow};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Polynomial<T>(pub Vec<Term<T>>)
@@ -35,24 +35,24 @@ where
     T: Num + Pow<T, Output = T> + Copy + PartialEq + PartialOrd,
 {
     pub fn simplify(&mut self) {
-        let mut count: Vec<Term<T>> = Vec::new();
+        let mut current_coefficient = zero();
+        let mut sorted: Vec<Term<T>> = Vec::new();
+        let mut prev = match self.0.first() {
+            Some(t) => t.coefficient,
+            None => return,
+        };
+        self.0
+            .sort_by(|a, b| b.exponent.partial_cmp(&a.exponent).unwrap());
 
-        for term in self.0.iter() {
-            let mut bound = false;
-            for vec_term in count.iter_mut() {
-                if vec_term.exponent == term.exponent {
-                    vec_term.coefficient = vec_term.coefficient + term.coefficient;
-                    bound = true;
-                    break;
-                }
-            }
-            if !bound {
-                count.push(*term);
+        for next_term in self.0.iter() {
+            if next_term.exponent == prev {
+                current_coefficient = current_coefficient + next_term.coefficient;
+            } else {
+                sorted.push(Term::new(current_coefficient, prev));
+                current_coefficient = next_term.coefficient;
+                prev = next_term.exponent;
             }
         }
-        count.sort_by(|a, b| b.exponent.partial_cmp(&a.exponent).unwrap());
-        count.shrink_to_fit();
-        *self = Self(count);
     }
 }
 
