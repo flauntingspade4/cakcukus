@@ -14,7 +14,7 @@ A very basic library for simple calculus, with a `Term` type, and three traits b
 * `TermTrait` - A type's ability to be treated as a term in a polynomial, or as a polynomial
 
 The built-in `Term` implements all three traits, but it's allowed for other types to implement them for similar functionality.
-`Term` is also generic, but they type used for it's coefficient and exponent must have basic maths methods avaliable for them
+`Term` is also generic, but the type used for it's coefficient and exponent must have basic maths methods avaliable for them
 
 ## Usage
 
@@ -40,7 +40,7 @@ fn main() {
         Term::new(-3., 1.),
         Term::new(5., 0.),
     ]);
-    // Could also use `let terms = terms!(2., 2., -3., 1., 5., 0.);
+    // Could also use `let terms = terms!(2., 2., -3., 1., 5., 0.);`
 
     // This differentiates into 4x - 3
     let differentiated = terms.differentiate_self();
