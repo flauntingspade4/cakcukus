@@ -40,7 +40,7 @@ fn main() {
         Term::new(-3., 1.),
         Term::new(5., 0.),
     ]);
-    // Could also use `let terms = terms!(2., 2., -3., 1., 5., 0.);
+    // Could also use `let terms = terms!(2., 2., -3., 1., 5., 0.);`
 
     // This differentiates into 4x - 3
     let differentiated = terms.differentiate_self();
