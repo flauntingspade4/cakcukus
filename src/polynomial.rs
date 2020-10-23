@@ -32,18 +32,17 @@ where
 
 impl<T> Polynomial<T>
 where
-    T: Num + Pow<T, Output = T> + Copy + PartialEq + PartialOrd + Debug,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     pub fn simplify(&mut self) {
-        let mut prev_exponent = match self.0.first() {
-            Some(t) => t.exponent,
-            None => return,
-        };
-
+        if self.0.is_empty() {
+            return;
+        }
+        self.0
+            .sort_unstable_by(|a, b| b.exponent.partial_cmp(&a.exponent).unwrap());
+        let mut prev_exponent = self.0.first().unwrap().exponent;
         let mut current_coefficient = zero();
         let mut sorted: Vec<Term<T>> = Vec::new();
-        self.0
-            .sort_by(|a, b| b.exponent.partial_cmp(&a.exponent).unwrap());
 
         for next_term in self.0.iter() {
             if next_term.exponent == prev_exponent {
