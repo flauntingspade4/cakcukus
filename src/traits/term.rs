@@ -29,7 +29,7 @@ where
 
 impl<T> TermTrait<T> for Polynomial<T>
 where
-    T: Num + Pow<T, Output = T> + Copy,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
         let mut total = zero();

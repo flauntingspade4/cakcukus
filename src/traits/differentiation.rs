@@ -15,7 +15,7 @@ pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
 
 impl<T> Differentiation<T> for Polynomial<T>
 where
-    T: Num + Pow<T, Output = T> + Copy,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn differentiate(&self, x: &T) -> T {
         let mut total = zero();

@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use crate::Term;
 
 use num_traits::{identities::zero, Num, Pow};
@@ -35,8 +33,6 @@ where
     T: Num + Pow<T, Output = T> + Clone + PartialOrd,
 {
     pub fn simplify(&mut self) {
-        let sw = simple_stopwatch::Stopwatch::start_new();
-
         if self.0.is_empty() {
             return;
         }
@@ -50,7 +46,9 @@ where
             if next_term.exponent == prev_exponent {
                 current_coefficient = current_coefficient + next_term.coefficient.clone();
             } else {
-                sorted.push(Term::new(current_coefficient, prev_exponent));
+                if current_coefficient != zero() {
+                    sorted.push(Term::new(current_coefficient, prev_exponent));
+                }
                 current_coefficient = next_term.coefficient.clone();
                 prev_exponent = next_term.exponent.clone();
             }
@@ -58,61 +56,58 @@ where
         sorted.push(Term::new(current_coefficient, prev_exponent));
 
         self.0 = sorted;
-
-        let ns = sw.ns();
-        println!("Time taken to simplify: {}ns", ns,);
     }
 }
 
 mod impl_std_traits {
+    use crate::{Polynomial, Term};
     use core::{
         fmt::Display,
-        ops::{Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
+        ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
     };
-    use std::ops::Neg;
-
-    use crate::{Polynomial, Term};
 
     use num_traits::{Num, Pow};
-    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd> Div for Polynomial<T> {
+
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> Div for Polynomial<T>
+    where
+        Term<T>: Neg<Output = Term<T>>,
+    {
         type Output = Self;
 
         fn div(mut self, mut rhs: Self) -> Self::Output {
-            println!("Simplifying `Self` in div");
             self.simplify();
-            println!("Simplifying `rhs` in div");
             rhs.simplify();
             let mut to_return = Vec::new();
-            for i in 0..self.0.len() {
-                to_return.push(Term::new(
-                    self.0[i].coefficient.clone(),
-                    self.0[i].exponent.clone() - rhs.0[0].exponent.clone(),
-                ));
-                // self.0
+            while self.0.len() != 1 {
+                let to_push = Term::new(
+                    self.0[0].coefficient.clone(),
+                    self.0[0].exponent.clone() - rhs.0[0].exponent.clone(),
+                );
+                to_return.push(to_push.clone());
+                self -= rhs.clone() * to_push;
             }
-            for term in self.0.iter_mut() {
-                to_return.push(term.clone() / rhs.0[0].clone());
-            }
-            /*for term in self.0.iter() {
-                for rhs_term in rhs.0.iter() {
-                    to_return.push(*term / *rhs_term);
-                }
-            }*/
             Self(to_return)
         }
     }
     // TODO Make this work
-    /*impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd> DivAssign for Polynomial<T> {
-        fn div_assign(&mut self, rhs: Self) {
-            let mut to_set = Vec::with_capacity(self.0.len() * rhs.0.len());
-            for term in self.0.iter() {
-                for rhs_term in rhs.0.iter() {
-                    to_set.push(*term / *rhs_term);
-                }
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> DivAssign
+        for Polynomial<T>
+    {
+        fn div_assign(&mut self, mut rhs: Self) {
+            self.simplify();
+            rhs.simplify();
+            let mut to_return = Vec::new();
+            while self.0.len() != 1 {
+                let to_push = Term::new(
+                    self.0[0].coefficient.clone(),
+                    self.0[0].exponent.clone() - rhs.0[0].exponent.clone(),
+                );
+                to_return.push(to_push.clone());
+                *self -= rhs.clone() * to_push;
             }
-            *self = Self(to_set)
+            self.0 = to_return;
         }
-    }*/
+    }
     impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd> Div<Term<T>> for Polynomial<T> {
         type Output = Self;
 
@@ -222,10 +217,10 @@ mod impl_std_traits {
             for rhs_term in rhs.0 {
                 self.0.push(-rhs_term);
             }
-            return self;
+            self
         }
     }
-    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd> SubAssign for Polynomial<T>
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> SubAssign for Polynomial<T>
     where
         Term<T>: Neg<Output = Term<T>>,
     {
@@ -233,6 +228,56 @@ mod impl_std_traits {
             for rhs_term in rhs.0 {
                 self.0.push(-rhs_term);
             }
+            self.simplify();
+        }
+    }
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> Sub<Term<T>>
+        for Polynomial<T>
+    where
+        Term<T>: Neg<Output = Term<T>>,
+    {
+        type Output = Self;
+
+        fn sub(mut self, rhs: Term<T>) -> Self::Output {
+            self.0.push(-rhs);
+
+            self.simplify();
+            self
+        }
+    }
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> SubAssign<Term<T>>
+        for Polynomial<T>
+    where
+        Term<T>: Neg<Output = Term<T>>,
+    {
+        fn sub_assign(&mut self, rhs: Term<T>) {
+            self.0.push(-rhs);
+            self.simplify();
+        }
+    }
+
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd> Add for Polynomial<T>
+    where
+        Term<T>: Neg<Output = Term<T>>,
+    {
+        type Output = Self;
+
+        fn add(mut self, rhs: Self) -> Self::Output {
+            for rhs_term in rhs.0 {
+                self.0.push(rhs_term);
+            }
+            self
+        }
+    }
+    impl<T: Num + Pow<T, Output = T> + Clone + PartialOrd + Neg<Output = T>> AddAssign for Polynomial<T>
+    where
+        Term<T>: Neg<Output = Term<T>>,
+    {
+        fn add_assign(&mut self, rhs: Self) {
+            for rhs_term in rhs.0 {
+                self.0.push(rhs_term);
+            }
+            self.simplify();
         }
     }
 

@@ -14,7 +14,7 @@ pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
 
 impl<T> Integration<T> for Polynomial<T>
 where
-    T: Num + Pow<T, Output = T> + Copy,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn integrate_self(&self) -> Self {
         let mut all = Vec::with_capacity(self.0.len());

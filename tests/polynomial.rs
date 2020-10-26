@@ -74,19 +74,16 @@ fn div_test_term_t() {
 
 #[test]
 fn div_test_polynomial_t() {
-    let polynomial: Polynomial<f64> = terms!(15., 2., 2., 1., 5., 0.);
+    let polynomial: Polynomial<f64> = terms!(1., 3., 3., 2., -10., 1., -24., 0.);
 
-    let mut polynomial_2 = polynomial.clone() * terms!(2., 4., 3., 2., 5., 0.);
+    let mut polynomial_2 = polynomial.clone() / terms!(1., 2., 6., 1., 8., 0.);
     polynomial_2.simplify();
 
-    assert_eq!(
-        polynomial_2,
-        terms!(30., 6., 4., 5., 55., 4., 6., 3., 90., 2., 10., 1., 25., 0.)
-    );
+    assert_eq!(polynomial_2, terms!(1., 1., -3., 0.));
 
     polynomial_2 *= terms!(2., 3.);
 
-    let mut polynomial = polynomial * terms!(2., 4., 3., 2., 5., 0.) * terms!(2., 3.);
+    let mut polynomial = polynomial / terms!(1., 2., 6., 1., 8., 0.) * terms!(2., 3.);
     polynomial.simplify();
 
     assert_eq!(polynomial_2, polynomial);
