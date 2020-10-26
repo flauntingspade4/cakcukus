@@ -1,7 +1,7 @@
-use num_traits::{
-    identities::{one, zero},
-    Num, Pow,
-};
+use num_traits::{Num, Pow};
+
+#[cfg(feature = "built_in_types")]
+use num_traits::identities::{one, zero};
 
 #[cfg(feature = "built_in_types")]
 use crate::{traits::TermTrait, Polynomial, Term};

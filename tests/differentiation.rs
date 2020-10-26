@@ -1,8 +1,10 @@
+#[cfg(feature = "built_in_types")]
 use cakcukus::{
     traits::{Differentiation, TermTrait},
     Polynomial, Term,
 };
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn differentiate_return() {
     // Build the initial equation, being 2x^2 - 3x + 5

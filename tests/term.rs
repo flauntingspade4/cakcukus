@@ -1,5 +1,7 @@
+#[cfg(feature = "built_in_types")]
 use cakcukus::{terms, Polynomial, Term};
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn terms() {
     let terms = terms!(2., 2., -3., 1.);
@@ -10,6 +12,7 @@ fn terms() {
     );
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn term() {
     let term: Term<u32> = terms!(5, 2);
@@ -17,6 +20,7 @@ fn term() {
     assert_eq!(term, Term::new(5, 2))
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn mult() {
     let mut term: Term<u32> = terms!(2, 1);
@@ -28,6 +32,7 @@ fn mult() {
     assert_eq!(term * terms!(1, 3), Term::new(30, 4));
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn div() {
     let mut term: Term<u32> = terms!(30, 4);

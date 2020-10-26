@@ -1,5 +1,7 @@
+#[cfg(feature = "built_in_types")]
 use cakcukus::{terms, Polynomial};
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn mult_test_t() {
     let polynomial: Polynomial<f64> = terms!(15., 2., 2., 1., 5., 0.);
@@ -13,6 +15,7 @@ fn mult_test_t() {
     assert_eq!(polynomial, polynomial_2);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn mult_test_term_t() {
     let polynomial: Polynomial<f64> = terms!(15., 2., 2., 1., 5., 0.);
@@ -26,6 +29,7 @@ fn mult_test_term_t() {
     assert_eq!(polynomial, polynomial_2);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn mult_test_polynomial_t() {
     let polynomial: Polynomial<f64> = terms!(15., 2., 2., 1., 5., 0.);
@@ -46,6 +50,7 @@ fn mult_test_polynomial_t() {
     assert_eq!(polynomial_2, polynomial);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn div_test_t() {
     let polynomial: Polynomial<f64> = terms!(30., 2., 4., 1., 10., 0.);
@@ -59,6 +64,7 @@ fn div_test_t() {
     assert_eq!(polynomial, polynomial_2);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn div_test_term_t() {
     let polynomial: Polynomial<f64> = terms!(30., 4., 4., 3., 10., 2.);
@@ -72,6 +78,7 @@ fn div_test_term_t() {
     assert_eq!(polynomial, polynomial_2);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn div_test_polynomial_t() {
     let polynomial: Polynomial<f64> = terms!(1., 3., 3., 2., -10., 1., -24., 0.);
@@ -89,6 +96,7 @@ fn div_test_polynomial_t() {
     assert_eq!(polynomial_2, polynomial);
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 #[ignore]
 fn simplify_bench() {

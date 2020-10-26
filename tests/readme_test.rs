@@ -1,9 +1,11 @@
+#[cfg(feature = "built_in_types")]
 use cakcukus::{
     terms,
     traits::{Differentiation, TermTrait},
     Polynomial, Term,
 };
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn test_vec() {
     // Build the initial equation, being 2x^2 - 3x + 5
@@ -23,6 +25,7 @@ fn test_vec() {
     // Outputs 25
 }
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn test_terms() {
     // Build the initial equation, being 2x^2 - 3x + 5

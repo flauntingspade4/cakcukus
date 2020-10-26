@@ -1,8 +1,10 @@
+#[cfg(feature = "built_in_types")]
 use cakcukus::{
     traits::{Integration, TermTrait},
     Polynomial, Term,
 };
 
+#[cfg(feature = "built_in_types")]
 #[test]
 fn intergrate_return() {
     // Builds the initial equaton, being x^4 + 2x + 4
