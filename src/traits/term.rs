@@ -1,14 +1,16 @@
-use num_traits::{identities::zero, Num, Pow};
+use num_traits::{Num, Pow};
 
-use crate::Term;
+#[cfg(feature = "built_in_types")]
+use num_traits::identities::zero;
+
+#[cfg(feature = "built_in_types")]
+use crate::{Polynomial, Term};
 
 /// A trait describing a type's ability to be
-/// treated as a term in a polynomial-while it's
-/// not required that T implements Copy, it's
-/// advised
+/// treated as a term in a polynomial
 pub trait TermTrait<T>
 where
-    T: Num + Pow<T, Output = T>,
+    T: Num + Pow<T, Output = T> + Copy,
 {
     /// Sums between two given upper and lower bounds
     fn sum_between(&self, lower: T, upper: T) -> T {
@@ -29,20 +31,21 @@ where
     fn sum_with_respect_to(&self, x: &T) -> T;
 }
 
-impl<J, T> TermTrait<T> for Vec<J>
+#[cfg(feature = "built_in_types")]
+impl<T> TermTrait<T> for Polynomial<T>
 where
-    J: TermTrait<T>,
-    T: Num + Pow<T, Output = T>,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn sum_with_respect_to(&self, x: &T) -> T {
         let mut total = zero();
-        for term in self.iter() {
+        for term in self.0.iter() {
             total = total + term.sum_with_respect_to(x);
         }
         total
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> TermTrait<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,

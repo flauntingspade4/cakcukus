@@ -1,11 +1,10 @@
-use num_traits::{
-    identities::{one, zero},
-    Num, Pow,
-};
+use num_traits::{Num, Pow};
 
-use crate::Term;
+#[cfg(feature = "built_in_types")]
+use num_traits::identities::{one, zero};
 
-use super::TermTrait;
+#[cfg(feature = "built_in_types")]
+use crate::{traits::TermTrait, Polynomial, Term};
 
 pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     /// Intergrates a copy of self, and returns the copy
@@ -14,28 +13,29 @@ pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     fn integrate(&self, lower: T, upper: T) -> T;
 }
 
-impl<J, T> Integration<T> for Vec<J>
+#[cfg(feature = "built_in_types")]
+impl<T> Integration<T> for Polynomial<T>
 where
-    J: Integration<T> + TermTrait<T>,
-    T: Num + Pow<T, Output = T> + Copy,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn integrate_self(&self) -> Self {
-        let mut all = Vec::with_capacity(self.len());
-        for x in self.iter() {
+        let mut all = Vec::with_capacity(self.0.len());
+        for x in self.0.iter() {
             all.push(x.integrate_self())
         }
-        all
+        Polynomial(all)
     }
 
     fn integrate(&self, lower: T, upper: T) -> T {
         let mut total = zero();
-        for x in self.iter() {
+        for x in self.0.iter() {
             total = total + x.sum_with_respect_to(&upper) - x.sum_with_respect_to(&lower);
         }
         total
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Integration<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,

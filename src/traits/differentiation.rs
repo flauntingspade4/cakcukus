@@ -1,11 +1,10 @@
-use num_traits::{
-    identities::{one, zero},
-    Num, Pow,
-};
+use num_traits::{Num, Pow};
 
-use crate::Term;
+#[cfg(feature = "built_in_types")]
+use num_traits::identities::{one, zero};
 
-use super::TermTrait;
+#[cfg(feature = "built_in_types")]
+use crate::{traits::TermTrait, Polynomial, Term};
 
 /// Describes a type's ability to do basic differentiation
 pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
@@ -15,27 +14,28 @@ pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
     fn differentiate_self(&self) -> Self;
 }
 
-impl<J, T> Differentiation<T> for Vec<J>
+#[cfg(feature = "built_in_types")]
+impl<T> Differentiation<T> for Polynomial<T>
 where
-    J: Differentiation<T> + TermTrait<T>,
-    T: Num + Pow<T, Output = T> + Copy,
+    T: Num + Pow<T, Output = T> + Copy + PartialOrd,
 {
     fn differentiate(&self, x: &T) -> T {
         let mut total = zero();
-        for term in self.iter() {
+        for term in self.0.iter() {
             total = total + term.differentiate(&x);
         }
         total
     }
     fn differentiate_self(&self) -> Self {
-        let mut all = Vec::with_capacity(self.len());
-        for term in self.iter() {
+        let mut all = Vec::with_capacity(self.0.len());
+        for term in self.0.iter() {
             all.push(term.differentiate_self())
         }
-        all
+        Self(all)
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Differentiation<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,
