@@ -1,5 +1,6 @@
 use num_traits::{identities::zero, Num, Pow};
 
+#[cfg(feature = "built_in_types")]
 use crate::{Polynomial, Term};
 
 /// A trait describing a type's ability to be
@@ -27,6 +28,7 @@ where
     fn sum_with_respect_to(&self, x: &T) -> T;
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> TermTrait<T> for Polynomial<T>
 where
     T: Num + Pow<T, Output = T> + Copy + PartialOrd,
@@ -40,6 +42,7 @@ where
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> TermTrait<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,

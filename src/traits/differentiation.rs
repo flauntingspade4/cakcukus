@@ -3,6 +3,7 @@ use num_traits::{
     Num, Pow,
 };
 
+#[cfg(feature = "built_in_types")]
 use crate::{traits::TermTrait, Polynomial, Term};
 
 /// Describes a type's ability to do basic differentiation
@@ -13,6 +14,7 @@ pub trait Differentiation<T: Num + Pow<T, Output = T> + Copy> {
     fn differentiate_self(&self) -> Self;
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Differentiation<T> for Polynomial<T>
 where
     T: Num + Pow<T, Output = T> + Copy + PartialOrd,
@@ -33,6 +35,7 @@ where
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Differentiation<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,

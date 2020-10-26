@@ -3,6 +3,7 @@ use num_traits::{
     Num, Pow,
 };
 
+#[cfg(feature = "built_in_types")]
 use crate::{traits::TermTrait, Polynomial, Term};
 
 pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
@@ -12,6 +13,7 @@ pub trait Integration<T: Num + Pow<T, Output = T> + Copy> {
     fn integrate(&self, lower: T, upper: T) -> T;
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Integration<T> for Polynomial<T>
 where
     T: Num + Pow<T, Output = T> + Copy + PartialOrd,
@@ -33,6 +35,7 @@ where
     }
 }
 
+#[cfg(feature = "built_in_types")]
 impl<T> Integration<T> for Term<T>
 where
     T: Num + Pow<T, Output = T> + Copy,
