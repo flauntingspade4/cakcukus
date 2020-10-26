@@ -6,6 +6,11 @@ edition = "2018"
 
 [dependencies]
 num-traits = "^0.2.12"
+simple-stopwatch = "^0.1.4"
 
 [dev-dependencies]
-simple-stopwatch = "0.1.4"
+simple-stopwatch = "^0.1.4"
+
+[features]
+default = ["build_in_types"]
+built_in_types = []
