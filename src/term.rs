@@ -139,7 +139,7 @@ mod impl_std_traits {
         type Output = Self;
 
         fn neg(self) -> Self::Output {
-            Self::new(-self.coefficient, -self.exponent)
+            Self::new(-self.coefficient, self.exponent)
         }
     }
 
