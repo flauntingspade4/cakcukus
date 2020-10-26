@@ -12,5 +12,5 @@ simple-stopwatch = "^0.1.4"
 simple-stopwatch = "^0.1.4"
 
 [features]
-default = ["build_in_types"]
+default = ["built_in_types"]
 built_in_types = []
